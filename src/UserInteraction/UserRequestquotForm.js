@@ -189,19 +189,17 @@ export default function UserRequestquotForm() {
                            
 
                             <button
+                                type="submit"
+                                className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-6 rounded-lg transition"
+                            >
+                                Request Quote
+                            </button>
+                            <button
                                 type="button"
                                 onClick={handleCancel}
                                 className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white py-2 px-6 rounded-lg transition"
                             >
                                 Cancel
-                            </button>
-
-
-                            <button
-                                type="submit"
-                                className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-6 rounded-lg transition"
-                            >
-                                Request Quote
                             </button>
                         </div>
                     </form>
