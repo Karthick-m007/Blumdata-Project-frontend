@@ -70,7 +70,7 @@ export default function QuoteDetails() {
     return (
         <div className="min-h-screen bg-blue-50 pt-24">
             <Navbar />
-            <div className="pt-16 px-6 max-w-4xl mx-auto bg-white rounded-lg shadow-md p-8 space-y-8">
+            <div className="pt-16 px-6 max-w-screen-lg mx-auto bg-white rounded-lg shadow-md p-8 space-y-8">
                 <h2 className="text-3xl font-semibold text-gray-800 mb-6">Quote Details — #{quote.id}</h2>
 
                 <div className="space-y-2 text-gray-700 text-lg">
@@ -97,7 +97,10 @@ export default function QuoteDetails() {
                             const isCurrent = idx === currentStageIndex;
 
                             return (
-                                <div key={stage} className="flex flex-col items-center w-20 md:w-24">
+                                <div
+                                    key={stage}
+                                    className="flex flex-col items-center w-20 sm:w-24 md:w-28 lg:w-32 xl:w-36"
+                                >
                                     <div>
                                         {isCompleted ? (
                                             <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center shadow-md">
