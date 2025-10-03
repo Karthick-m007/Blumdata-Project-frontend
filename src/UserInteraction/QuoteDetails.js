@@ -91,13 +91,13 @@ export default function QuoteDetails() {
 
                 <div>
                     <h3 className="text-xl font-semibold mb-5 text-gray-800">Production / Delivery Stages</h3>
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-wrap justify-center gap-6 md:gap-12">
                         {quote.stages.map((stage, idx) => {
                             const isCompleted = idx < currentStageIndex;
                             const isCurrent = idx === currentStageIndex;
 
                             return (
-                                <div key={stage} className="flex flex-col items-center w-24">
+                                <div key={stage} className="flex flex-col items-center w-20 md:w-24">
                                     <div>
                                         {isCompleted ? (
                                             <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center shadow-md">
@@ -111,8 +111,7 @@ export default function QuoteDetails() {
                                     </div>
                                     <span
                                         className={`mt-3 text-center text-sm font-medium
-                    ${isCompleted ? 'text-gray-900' : isCurrent ? 'text-indigo-600' : 'text-gray-400'}
-                  `}
+                    ${isCompleted ? 'text-gray-900' : isCurrent ? 'text-indigo-600' : 'text-gray-400'}`}
                                     >
                                         {stage}
                                     </span>
