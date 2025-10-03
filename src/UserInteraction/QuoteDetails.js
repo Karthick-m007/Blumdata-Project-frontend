@@ -91,7 +91,7 @@ export default function QuoteDetails() {
 
                 <div>
                     <h3 className="text-xl font-semibold mb-5 text-gray-800">Production / Delivery Stages</h3>
-                    <div className="flex flex-wrap justify-center gap-6 md:gap-12">
+                    <div className="flex flex-wrap justify-center gap-6 sm:gap-8 md:gap-12">
                         {quote.stages.map((stage, idx) => {
                             const isCompleted = idx < currentStageIndex;
                             const isCurrent = idx === currentStageIndex;
@@ -114,7 +114,7 @@ export default function QuoteDetails() {
                                     </div>
                                     <span
                                         className={`mt-3 text-center text-sm font-medium
-                    ${isCompleted ? 'text-gray-900' : isCurrent ? 'text-indigo-600' : 'text-gray-400'}`}
+                                            ${isCompleted ? 'text-gray-900' : isCurrent ? 'text-indigo-600' : 'text-gray-400'}`}
                                     >
                                         {stage}
                                     </span>
@@ -122,9 +122,8 @@ export default function QuoteDetails() {
                                     {/* Render connecting line except for last step */}
                                     {idx !== quote.stages.length - 1 && (
                                         <div
-                                            className={`w-full h-1.5 mt-3 rounded-full ${isCompleted ? 'bg-indigo-600' : 'bg-gray-300'
-                                                }`}
-                                            style={{ position: 'absolute', top: '35px', left: 'calc(100% + 8px)', zIndex: -1 }}
+                                            className={`w-full h-1.5 mt-3 rounded-full ${isCompleted ? 'bg-indigo-600' : 'bg-gray-300'}`}
+                                            style={{ position: 'relative', top: '35px', zIndex: -1 }}
                                         />
                                     )}
                                 </div>
