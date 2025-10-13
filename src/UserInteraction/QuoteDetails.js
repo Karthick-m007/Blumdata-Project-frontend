@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../Components/UserNavbar';
 
 // SVG Icons for the stepper
@@ -10,62 +10,89 @@ const CheckIcon = () => (
 );
 
 const CurrentStepIcon = () => (
-    <div className="w-6 h-6 rounded-full border-2 border-indigo-600 flex items-center justify-center">
-        <div className="w-3 h-3 bg-indigo-600 rounded-full" />
+    <div className="w-8 h-8 rounded-full border-2 border-indigo-600 flex items-center justify-center bg-indigo-600">
+        <div className="w-4 h-4 bg-white rounded-full" />
     </div>
 );
 
 const UpcomingStepIcon = () => (
-    <div className="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center text-gray-400">
+    <div className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-400">
         {/* Empty circle */}
     </div>
 );
 
 export default function QuoteDetails() {
+    const url = process.env.REACT_APP_BACKEND_URL; // Make sure you set this correctly in your .env file
     const { id } = useParams();
+    const navigate = useNavigate(); // Hook for navigation
     const [quote, setQuote] = useState(null);
+    const [error, setError] = useState('');
+    const [trackingStatus, setTrackingStatus] = useState('');
+
+    // Function to fetch quote details from the backend
+    const fetchQuote = async () => {
+        try {
+            const response = await fetch(`${url}requestquote-getitems/${id}`, {
+                method: 'GET',
+                credentials: 'include',
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                setQuote(data.product);
+                setTrackingStatus(data.product.trackingStatus); // Set initial tracking status
+            } else {
+                setError(data.message);
+            }
+        } catch (err) {
+            setError('Error fetching quote details');
+        }
+    };
 
     useEffect(() => {
-        // Replace with your API call here
-        const mockData = {
-            1: {
-                id: 1,
-                product: '3D Printer',
-                quantity: 2,
-                status: 'Pending',
-                requestedOn: '05-09-2025',
-                stages: ['Requested', 'Pending', 'In Production', 'Testing', 'Ready for Delivery'],
-            },
-            2: {
-                id: 2,
-                product: 'CNC Machine',
-                quantity: 1,
-                status: 'In Production',
-                requestedOn: '05-09-2025',
-                stages: ['Requested', 'Pending', 'In Production', 'Testing', 'Ready for Delivery'],
-            },
-            3: {
-                id: 3,
-                product: 'Laser Cutter',
-                quantity: 5,
-                status: 'Ready for Delivery',
-                requestedOn: '05-09-2025',
-                stages: ['Requested', 'Pending', 'In Production', 'Testing', 'Ready for Delivery'],
-            },
-        };
-
-        setQuote(mockData[id] || null);
+        fetchQuote(); // Initial fetch on component mount
     }, [id]);
 
-    if (!quote)
+    // Render the stages (Requested, In Progress, etc.)
+    const renderStages = () => {
+        if (!quote || !quote.stages) return null;
+
+        const stages = quote.stages;
+        const currentStageIndex = stages.indexOf(trackingStatus);
+
+        return stages.map((stage, index) => {
+            const isCompleted = index < currentStageIndex;
+            const isCurrent = index === currentStageIndex;
+
+            return (
+                <div key={index} className="flex items-center space-x-2">
+                    {isCompleted ? (
+                        <CheckIcon />
+                    ) : isCurrent ? (
+                        <CurrentStepIcon />
+                    ) : (
+                        <UpcomingStepIcon />
+                    )}
+                    <span className={`text-sm ${isCompleted ? 'text-gray-600' : 'text-gray-400'}`}>{stage}</span>
+                </div>
+            );
+        });
+    };
+
+    // If quote is not found, display a message
+    if (!quote) {
         return (
             <div className="min-h-screen bg-blue-50">
                 <Navbar />
                 <div className="pt-24 px-6 text-center text-gray-700">Quote not found.</div>
             </div>
         );
+    }
 
-    const currentStageIndex = quote.stages.findIndex((stage) => stage === quote.status);
+    // Handle navigation to the payment page
+    const handlePayNow = () => {
+        navigate('/payment', { state: { quoteId: id, quoteDetails: quote } });
+    };
 
     return (
         <div className="min-h-screen bg-blue-50 pt-24">
@@ -82,7 +109,7 @@ export default function QuoteDetails() {
                     </p>
                     <p>
                         <strong>Status:</strong>{' '}
-                        <span className="text-indigo-700 font-semibold">{quote.status}</span>
+                        <span className="text-indigo-700 font-semibold">{trackingStatus}</span>
                     </p>
                     <p>
                         <strong>Requested On:</strong> {quote.requestedOn}
@@ -92,45 +119,28 @@ export default function QuoteDetails() {
                 <div>
                     <h3 className="text-xl font-semibold mb-5 text-gray-800">Production / Delivery Stages</h3>
                     <div className="flex flex-wrap justify-center gap-6 sm:gap-8 md:gap-12">
-                        {quote.stages.map((stage, idx) => {
-                            const isCompleted = idx < currentStageIndex;
-                            const isCurrent = idx === currentStageIndex;
-
-                            return (
-                                <div
-                                    key={stage}
-                                    className="flex flex-col items-center w-20 sm:w-24 md:w-28 lg:w-32 xl:w-36"
-                                >
-                                    <div>
-                                        {isCompleted ? (
-                                            <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center shadow-md">
-                                                <CheckIcon />
-                                            </div>
-                                        ) : isCurrent ? (
-                                            <CurrentStepIcon />
-                                        ) : (
-                                            <UpcomingStepIcon />
-                                        )}
-                                    </div>
-                                    <span
-                                        className={`mt-3 text-center text-sm font-medium
-                                            ${isCompleted ? 'text-gray-900' : isCurrent ? 'text-indigo-600' : 'text-gray-400'}`}
-                                    >
-                                        {stage}
-                                    </span>
-
-                                    {/* Render connecting line except for last step */}
-                                    {idx !== quote.stages.length - 1 && (
-                                        <div
-                                            className={`w-full h-1.5 mt-3 rounded-full ${isCompleted ? 'bg-indigo-600' : 'bg-gray-300'}`}
-                                            style={{ position: 'relative', top: '35px', zIndex: -1 }}
-                                        />
-                                    )}
-                                </div>
-                            );
-                        })}
+                        {renderStages()}
                     </div>
                 </div>
+
+                {/* Display error message if there is an issue */}
+                {error && (
+                    <div className="mt-6 text-center text-red-600">
+                        <p>{error}</p>
+                    </div>
+                )}
+
+                {/* Payment Button */}
+                {trackingStatus !== "Paid" && (
+                    <div className="text-center">
+                        <button
+                            onClick={handlePayNow}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition-colors duration-300"
+                        >
+                            Pay Now
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

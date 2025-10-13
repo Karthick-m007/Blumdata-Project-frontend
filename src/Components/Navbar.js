@@ -1,36 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Navbar() {
+    const url = process.env.REACT_APP_BACKEND_URL;
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    useEffect(() => {
-        // Check if the user is logged in or not on every render
-        const user = localStorage.getItem('user');
-        setIsLoggedIn(!!user);  // If there’s a user, set loggedIn to true, otherwise false.
-    }, [isLoggedIn]); // recheck if the login state has changed
-
+    // Toggle off-canvas visibility
     const toggleOffcanvas = () => setIsOpen(!isOpen);
 
+    // Handle menu item navigation
     const handleMenuItemClick = (path) => {
         navigate(path);
-        setIsOpen(false);  // Close the menu on click
+        setIsOpen(false); // Close the off-canvas menu on click
     };
 
-    const handleLogin = () => {
-        // Dummy login function, adjust this logic when backend API is available
-        localStorage.setItem('user', JSON.stringify({ username: 'admin' }));
-        setIsLoggedIn(true);
-        navigate('/');
+    // Handle logout
+    const handleLogout = async () => {
+        try {
+            const response = await fetch(`${url}logout`, {
+                method: 'DELETE',
+                credentials: 'include',
+            });
+
+            const data = await response.json();
+            console.log('Logout response:', data);
+
+            if (response.ok && data.success) {
+                localStorage.removeItem('user');
+                navigate('/');
+            } else {
+                console.error('Logout failed:', data.message);
+            }
+        } catch (err) {
+            console.error('Logout error:', err);
+        }
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem('user');
-        setIsLoggedIn(false);
-        navigate('/');
-    };
+    const menuItems = [
+        { label: 'Dashboard', path: '/admin' },
+        { label: 'Manage Products', path: '/manageproduct' },
+        { label: 'Manage Quotes', path: '/quotmanage' },
+        // { label: 'Track Orders', path: '/admintrack' },
+        { label: 'Payments', path: '/paymentverify' },
+        { label: 'Logout', path: '/', onClick: handleLogout },
+    ];
 
     return (
         <nav className="fixed top-0 left-0 right-0 bg-indigo-600 shadow-md z-50">
@@ -45,20 +59,14 @@ export default function Navbar() {
 
                 {/* Desktop Menu */}
                 <ul className="hidden md:flex space-x-8 text-white font-medium">
-                    {[
-                        { label: 'Dashboard', path: '/admin' },
-                        { label: 'Manage Products', path: '/manageproduct' },
-                        { label: 'Manage Quotes', path: '/quotmanage' },
-                        { label: 'Track Orders', path: '/admintrack' },
-                        { label: 'Payments', path: '/paymentverify' },
-                        { label: isLoggedIn ? 'Logout' : 'Login', path: isLoggedIn ? '/' : '/login', onClick: isLoggedIn ? handleLogout : handleLogin },
-                    ].map(({ label, path, onClick }) => (
+                    {menuItems.map(({ label, path, onClick }) => (
                         <li
                             key={path}
                             onClick={onClick || (() => handleMenuItemClick(path))}
                             className="cursor-pointer relative group"
                         >
                             <span>{label}</span>
+                            {/* Animated underline */}
                             <span
                                 className="absolute left-0 -bottom-1 w-0 h-0.5 bg-white transition-all group-hover:w-full"
                                 style={{ transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)' }}
@@ -67,42 +75,32 @@ export default function Navbar() {
                     ))}
                 </ul>
 
-                {/* Mobile toggle button */}
+                {/* Mobile Hamburger Button */}
                 <button
                     onClick={toggleOffcanvas}
                     aria-label="Toggle menu"
-                    className="md:hidden text-white focus:outline-none focus:ring-2 focus:ring-white rounded transition-transform duration-300"
-                    style={{ transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
+                    className="md:hidden relative w-8 h-8 focus:outline-none"
                 >
-                    <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d={isOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
-                        />
-                    </svg>
+                    {/* Hamburger bars */}
+                    <span
+                        className={`block absolute h-0.5 w-8 bg-white rounded transform transition duration-300 ease-in-out ${isOpen ? 'rotate-45 top-3.5' : 'top-2'}`}
+                    />
+                    <span
+                        className={`block absolute h-0.5 w-8 bg-white rounded transition-opacity duration-300 ease-in-out ${isOpen ? 'opacity-0' : 'top-4'}`}
+                    />
+                    <span
+                        className={`block absolute h-0.5 w-8 bg-white rounded transform transition duration-300 ease-in-out ${isOpen ? '-rotate-45 top-3.5' : 'top-6'}`}
+                    />
                 </button>
             </div>
 
             {/* Mobile Offcanvas Menu */}
             <div
-                className={`fixed top-14 right-0 w-64 bg-white h-full shadow-lg transform transition-transform duration-300 ease-in-out z-40 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+                className={`fixed top-14 right-0 w-64 bg-white text-black h-[calc(100vh-56px)] shadow-lg rounded-l-lg z-40 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+                style={{ backdropFilter: 'blur(10px)' }}
             >
-                <ul className="flex flex-col p-6 space-y-6 text-gray-800 font-semibold">
-                    {[
-                        { label: '📊 Dashboard', path: '/' },
-                        { label: '📦 Manage Products', path: '/manageproduct' },
-                        { label: '📊 Track Orders', path: '/admintrack' },
-                        { label: '💳 Payments', path: '/paymentverify' },
-                        { label: isLoggedIn ? '🚪 Logout' : '🔑 Login', path: isLoggedIn ? '/' : '/login', onClick: isLoggedIn ? handleLogout : handleLogin },
-                    ].map(({ label, path, onClick }) => (
+                <ul className="flex flex-col p-6 space-y-6 font-semibold">
+                    {menuItems.map(({ label, path, onClick }) => (
                         <li
                             key={path}
                             onClick={onClick || (() => handleMenuItemClick(path))}
@@ -114,10 +112,10 @@ export default function Navbar() {
                 </ul>
             </div>
 
-            {/* Overlay for when menu is open */}
+            {/* Overlay */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-25 z-30"
+                    className="fixed inset-0 bg-black bg-opacity-25 z-30 transition-opacity duration-300 ease-in-out"
                     onClick={toggleOffcanvas}
                     aria-hidden="true"
                 />

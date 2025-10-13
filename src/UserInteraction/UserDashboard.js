@@ -54,7 +54,7 @@ export default function UserDashboard() {
         <ProductListing />
 
         {/* Track Orders */}
-        <section className="mt-12 bg-white p-6 rounded-lg shadow-md max-w-3xl mx-auto">
+        {/* <section className="mt-12 bg-white p-6 rounded-lg shadow-md max-w-3xl mx-auto">
           <h3 className="text-2xl font-semibold text-blue-900">Track Your Orders</h3>
           <p className="text-gray-700 mt-2">Enter your order ID to track its status.</p>
           <div className="mt-4">
@@ -72,7 +72,7 @@ export default function UserDashboard() {
               Track Order
             </button>
           </div>
-        </section>
+        </section> */}
       </div>
     </div>
   );

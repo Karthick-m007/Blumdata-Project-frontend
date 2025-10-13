@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate for page r
 import { CSSTransition } from 'react-transition-group';
 
 const LoginPage = () => {
+    const url = process.env.REACT_APP_BACKEND_URL
+    console.log(url)
     const [isAdmin, setIsAdmin] = useState(false); // Toggle between Admin and User login/register
     const [isLogin, setIsLogin] = useState(true); // Toggle between Login and Register forms
     const [formData, setFormData] = useState({
@@ -14,16 +16,16 @@ const LoginPage = () => {
     const navigate = useNavigate();
 
     // Dummy admin credentials
-    const adminCredentials = {
-        email: 'admin@admin.com',
-        password: 'admin123',
-    };
+    // const adminCredentials = {
+    //     email: 'admin123@gmail.com',
+    //     password: 'Admin@123',
+    // };
 
     // Dummy user credentials
-    const userCredentials = {
-        email: 'user@user.com',
-        password: 'user123',
-    };
+    // const userCredentials = {
+    //     email: 'user@user.com',
+    //     password: 'user123',
+    // };
 
     const handleLoginTypeChange = (e) => {
         setIsAdmin(e.target.value === 'admin');
@@ -41,37 +43,83 @@ const LoginPage = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
 
-        if (isLogin && isAdmin) {
-            if (
-                formData.email === adminCredentials.email &&
-                formData.password === adminCredentials.password
-            ) {
-                localStorage.setItem('isAdminLoggedIn', 'true');
-                navigate('/admin'); 
-            } else {
-                setError('Invalid email or password for Admin!');
+        const role = isAdmin ? 'admin' : 'user';  // Determine role based on isAdmin
+
+        if (isLogin) {
+            try {
+                const response = await fetch(`${url}login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include', // send session cookie
+                    body: JSON.stringify({
+                        email: formData.email,
+                        password: formData.password,
+                        role, // Include role in the login request
+                    }),
+                });
+
+                const data = await response.json();
+                console.log('Login response:', data);
+
+                if (data.success) {
+                    if (isAdmin) {
+                        // Admin login is successful
+                        navigate('/admin');
+                    } else {
+                        // User login is successful
+                        navigate('/userdashboard');
+                    }
+                } else {
+                    setError(data.message || 'Login failed.');
+                }
+            } catch (err) {
+                console.error('Login error:', err);
+                setError('Something went wrong during login.');
             }
-        }
-        else if (isLogin && !isAdmin) {
-            if (
-                formData.email === userCredentials.email &&
-                formData.password === userCredentials.password
-            ) {
-                localStorage.setItem('isUserLoggedIn', 'true');
-                navigate('/userdashboard');
-            } else {
-                setError('Invalid email or password for User!');
+        } else {
+            // Registration code (unchanged)
+            if (formData.password !== formData.confirmPassword) {
+                return setError('Passwords do not match.');
             }
-        }
-        else if (!isLogin && !isAdmin) {
-            console.log('User Register:', formData);
-        } else if (!isLogin && isAdmin) {
-            console.log('Admin Register:', formData);
+
+            try {
+                const response = await fetch(`${url}register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: formData.email,
+                        password: formData.password,
+                        name: formData.email.split('@')[0],
+                        role // Send role here as well for registration
+                    })
+                });
+
+                const data = await response.json();
+                console.log('Register response:', data);
+
+                if (data.success) {
+                    alert('Registration successful! You can now log in.');
+                    setIsLogin(true);
+                } else {
+                    setError(data.message || 'Registration failed.');
+                }
+
+            } catch (err) {
+                console.error('Registration error:', err);
+                setError('Something went wrong during registration.');
+            }
         }
     };
+
+
 
     const handleRedirectToRegister = () => {
         navigate('/register');
