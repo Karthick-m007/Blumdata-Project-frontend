@@ -243,9 +243,9 @@ const LoginPage = () => {
                 </CSSTransition>
 
                 {/* Forgot Password Link */}
-                <div className="mt-4 text-center text-sm">
+                {/* <div className="mt-4 text-center text-sm">
                     <a href="#" className="text-blue-600 hover:text-blue-800">Forgot Password?</a>
-                </div>
+                </div> */}
 
                 {/* Switch between Login and Register */}
                 <div className="mt-4 text-center">
