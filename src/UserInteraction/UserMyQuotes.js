@@ -48,6 +48,20 @@ const MyQuotesPage = () => {
         navigate(`/quote/${quoteId}`);
     };
 
+    // Function to return the appropriate color based on quote status
+    const getStatusColor = (status) => {
+        switch (status.toLowerCase()) {
+            case 'pending':
+                return 'bg-yellow-600'; // Yellow for pending
+            case 'approved':
+                return 'bg-green-600'; // Green for approved
+            case 'rejected':
+                return 'bg-red-600'; // Red for rejected
+            default:
+                return 'bg-gray-600'; // Default to gray if unknown status
+        }
+    };
+
     return (
         <div className="min-h-screen bg-blue-50">
             <div className="py-24">
@@ -61,7 +75,10 @@ const MyQuotesPage = () => {
                     <div>
                         {quotes.length > 0 ? (
                             quotes.map((quote) => (
-                                <div key={quote.requestQuote_id} className="flex justify-between items-center p-4 border-b border-gray-300">
+                                <div
+                                    key={quote.requestQuote_id}
+                                    className="flex justify-between items-center p-4 border-b border-gray-300"
+                                >
                                     <div>
                                         <h2 className="text-lg font-semibold text-gray-800">{quote.product}</h2>
                                         <p className="text-sm text-gray-500">Requested on: {formatDate(quote.delivery)}</p>
@@ -69,13 +86,13 @@ const MyQuotesPage = () => {
 
                                     <div className="flex flex-col items-end">
                                         <h4 className="text-sm text-gray-700">
-                                            Status: <span className="text-yellow-600 font-semibold">{quote.status}</span>
+                                            Status: <span className={`font-semibold ${getStatusColor(quote.status)}`}>{quote.status}</span>
                                         </h4>
                                         <button
                                             onClick={() => handleQuoteClick(quote._id)}  // Use handleQuoteClick here
                                             className={`mt-2 px-4 py-2 rounded-lg ${activeQuoteId === quote._id
-                                                    ? 'bg-blue-800 hover:bg-blue-700' // Highlight active button
-                                                    : 'bg-blue-600 hover:bg-blue-700'
+                                                ? 'bg-blue-800 hover:bg-blue-700' // Highlight active button
+                                                : 'bg-blue-600 hover:bg-blue-700'
                                                 } text-white`}
                                         >
                                             View Details
