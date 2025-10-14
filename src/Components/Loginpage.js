@@ -72,7 +72,7 @@ const LoginPage = () => {
                         console.log("Admin Data can be accessed")
                         console.log("Admin:", isAdmin)
                         // Admin login is successful
-                        navigate('/adminPage');
+                        navigate('/admin');
                     } else {
                         // User login is successful
                         navigate('/userdashboard');
