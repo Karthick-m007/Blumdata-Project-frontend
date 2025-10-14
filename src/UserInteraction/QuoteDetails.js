@@ -2,13 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../Components/UserNavbar';
 
-// Function to format the date
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     return isNaN(date) ? 'Invalid Date' : date.toLocaleDateString();
 };
 
-// SVG Icons for the stepper
 const CheckIcon = () => (
     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -22,26 +20,24 @@ const CurrentStepIcon = () => (
 );
 
 const UpcomingStepIcon = () => (
-    <div className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-400">
-        {/* Empty circle for upcoming stages */}
-    </div>
+    <div className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-400" />
 );
 
 const CompletedStepIcon = () => (
     <div className="w-8 h-8 rounded-full border-2 border-green-600 flex items-center justify-center bg-green-600">
-        <CheckIcon />  {/* Green check mark for completed stage */}
+        <CheckIcon />
     </div>
 );
 
 export default function QuoteDetails() {
-    const url = process.env.REACT_APP_BACKEND_URL; // Make sure you set this correctly in your .env file
+    const url = process.env.REACT_APP_BACKEND_URL;
     const { id } = useParams();
-    const navigate = useNavigate(); // Hook for navigation
+    const navigate = useNavigate();
     const [quote, setQuote] = useState(null);
     const [error, setError] = useState('');
     const [trackingStatus, setTrackingStatus] = useState('');
+    const [paymentStatus, setPaymentStatus] = useState(''); // For storing payment status
 
-    // Function to fetch quote details from the backend
     const fetchQuote = async () => {
         try {
             const response = await fetch(`${url}requestquote-getitems/${id}`, {
@@ -52,7 +48,8 @@ export default function QuoteDetails() {
             const data = await response.json();
             if (data.success) {
                 setQuote(data.product);
-                setTrackingStatus(data.product.trackingStatus); // Set initial tracking status
+                setTrackingStatus(data.product.trackingStatus);
+                setPaymentStatus(data.product.paymentStatus); // Set payment status
             } else {
                 setError(data.message);
             }
@@ -62,10 +59,9 @@ export default function QuoteDetails() {
     };
 
     useEffect(() => {
-        fetchQuote(); // Initial fetch on component mount
+        fetchQuote();
     }, [id]);
 
-    // Render the stages (Requested, In Progress, etc.)
     const renderStages = () => {
         if (!quote || !quote.stages) return null;
 
@@ -80,18 +76,18 @@ export default function QuoteDetails() {
             return (
                 <div key={index} className="flex items-center space-x-2">
                     {isCompleted ? (
-                        <CompletedStepIcon /> // Green check icon for completed stages
+                        <CompletedStepIcon />
                     ) : isCurrent ? (
-                        <CurrentStepIcon /> // Blue circle for current stage
+                        <CurrentStepIcon />
                     ) : (
-                        <UpcomingStepIcon /> // Empty circle for upcoming stages
+                        <UpcomingStepIcon />
                     )}
                     <span
                         className={`text-sm ${isCompleted
-                                ? 'text-gray-600' // Completed stages will have gray text
-                                : isCurrent
-                                    ? 'text-blue-600 font-semibold' // Current stage will be blue and bold
-                                    : 'text-gray-400' // Upcoming stages will have muted gray text
+                            ? 'text-gray-600'
+                            : isCurrent
+                                ? 'text-blue-600 font-semibold'
+                                : 'text-gray-400'
                             }`}
                     >
                         {stage}
@@ -101,7 +97,6 @@ export default function QuoteDetails() {
         });
     };
 
-    // If quote is not found, display a message
     if (!quote) {
         return (
             <div className="min-h-screen bg-blue-50">
@@ -111,7 +106,6 @@ export default function QuoteDetails() {
         );
     }
 
-    // Handle navigation to the payment page
     const handlePayNow = () => {
         navigate('/payment', { state: { quoteId: id, quoteDetails: quote } });
     };
@@ -124,6 +118,9 @@ export default function QuoteDetails() {
 
                 <div className="space-y-2 text-gray-700 text-lg">
                     <p>
+                        <strong>Order ID:</strong> <span className="font-mono">{quote.requestQuote_id}</span> {/* Order ID */}
+                    </p>
+                    <p>
                         <strong>Product:</strong> {quote.product}
                     </p>
                     <p>
@@ -134,8 +131,14 @@ export default function QuoteDetails() {
                         <span className="text-indigo-700 font-semibold">{trackingStatus}</span>
                     </p>
                     <p>
-                        <strong>Requested On:</strong> {quote.requestedOn ? formatDate(quote.requestedOn) : 'Not Available'}
+                        <strong>Payment Status:</strong>{' '}
+                        <span className={`text-${paymentStatus.toLowerCase() === 'paid' ? 'green' : 'red'}-600 font-semibold`}>
+                            {paymentStatus}
+                        </span>
                     </p>
+                    {/* <p>
+                        <strong>Requested On:</strong> {quote.requestedOn ? formatDate(quote.requestedOn) : 'Not Available'}
+                    </p> */}
                 </div>
 
                 <div>
@@ -145,15 +148,14 @@ export default function QuoteDetails() {
                     </div>
                 </div>
 
-                {/* Display error message if there is an issue */}
                 {error && (
                     <div className="mt-6 text-center text-red-600">
                         <p>{error}</p>
                     </div>
                 )}
 
-                {/* Payment Button */}
-                {trackingStatus !== "Paid" && (
+                {/* Only show the Pay Now button if the payment status is "Pending" */}
+                {paymentStatus !== 'Paid' && (
                     <div className="text-center">
                         <button
                             onClick={handlePayNow}
