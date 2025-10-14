@@ -2,6 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../Components/UserNavbar';
 
+// Function to format the date
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return isNaN(date) ? 'Invalid Date' : date.toLocaleDateString();
+};
+
 // SVG Icons for the stepper
 const CheckIcon = () => (
     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -10,14 +16,20 @@ const CheckIcon = () => (
 );
 
 const CurrentStepIcon = () => (
-    <div className="w-8 h-8 rounded-full border-2 border-indigo-600 flex items-center justify-center bg-indigo-600">
+    <div className="w-8 h-8 rounded-full border-2 border-blue-600 flex items-center justify-center bg-blue-600">
         <div className="w-4 h-4 bg-white rounded-full" />
     </div>
 );
 
 const UpcomingStepIcon = () => (
     <div className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-400">
-        {/* Empty circle */}
+        {/* Empty circle for upcoming stages */}
+    </div>
+);
+
+const CompletedStepIcon = () => (
+    <div className="w-8 h-8 rounded-full border-2 border-green-600 flex items-center justify-center bg-green-600">
+        <CheckIcon />  {/* Green check mark for completed stage */}
     </div>
 );
 
@@ -63,17 +75,27 @@ export default function QuoteDetails() {
         return stages.map((stage, index) => {
             const isCompleted = index < currentStageIndex;
             const isCurrent = index === currentStageIndex;
+            const isUpcoming = index > currentStageIndex;
 
             return (
                 <div key={index} className="flex items-center space-x-2">
                     {isCompleted ? (
-                        <CheckIcon />
+                        <CompletedStepIcon /> // Green check icon for completed stages
                     ) : isCurrent ? (
-                        <CurrentStepIcon />
+                        <CurrentStepIcon /> // Blue circle for current stage
                     ) : (
-                        <UpcomingStepIcon />
+                        <UpcomingStepIcon /> // Empty circle for upcoming stages
                     )}
-                    <span className={`text-sm ${isCompleted ? 'text-gray-600' : 'text-gray-400'}`}>{stage}</span>
+                    <span
+                        className={`text-sm ${isCompleted
+                                ? 'text-gray-600' // Completed stages will have gray text
+                                : isCurrent
+                                    ? 'text-blue-600 font-semibold' // Current stage will be blue and bold
+                                    : 'text-gray-400' // Upcoming stages will have muted gray text
+                            }`}
+                    >
+                        {stage}
+                    </span>
                 </div>
             );
         });
@@ -112,7 +134,7 @@ export default function QuoteDetails() {
                         <span className="text-indigo-700 font-semibold">{trackingStatus}</span>
                     </p>
                     <p>
-                        <strong>Requested On:</strong> {quote.requestedOn}
+                        <strong>Requested On:</strong> {quote.requestedOn ? formatDate(quote.requestedOn) : 'Not Available'}
                     </p>
                 </div>
 

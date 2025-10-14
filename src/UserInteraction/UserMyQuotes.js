@@ -52,18 +52,18 @@ const MyQuotesPage = () => {
     const getStatusColor = (status) => {
         switch (status.toLowerCase()) {
             case 'pending':
-                return 'bg-yellow-600'; // Yellow for pending
+                return 'bg-yellow-500 p-1 px-2 rounded text-white'; // Yellow for pending
             case 'approved':
-                return 'bg-green-600'; // Green for approved
+                return 'bg-green-500 p-1  px-2 rounded text-white'; // Green for approved
             case 'rejected':
-                return 'bg-red-600'; // Red for rejected
+                return 'bg-red-500 p-1  px-2 rounded text-white'; // Red for rejected
             default:
-                return 'bg-gray-600'; // Default to gray if unknown status
+                return 'bg-gray-500 p-1  px-2 rounded text-white'; // Default to gray if unknown status
         }
     };
 
     return (
-        <div className="min-h-screen bg-blue-50">
+        <div className="min-h-screen bg-blue-50 ">
             <div className="py-24">
                 <Navbar />
                 <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-8">
