@@ -32,8 +32,8 @@ const LoginPage = () => {
     };
 
     const handleFormToggle = () => {
-        setIsLogin(!isLogin); 
-        setError(null); 
+        setIsLogin(!isLogin);
+        setError(null);
     };
 
     const handleChange = (e) => {
@@ -70,7 +70,7 @@ const LoginPage = () => {
                 if (data.success) {
                     if (isAdmin) {
                         // Admin login is successful
-                        navigate('/adminlogin');
+                        navigate('/admin');
                     } else {
                         // User login is successful
                         navigate('/userdashboard');
