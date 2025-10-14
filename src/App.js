@@ -41,7 +41,7 @@ function App() {
 
         {/* (only accessible if logged in as admin) */}
         <Route element={<ProtectedRoute />}>
-          <Route path='/admin' element={<Dashboard />} />
+          <Route path='/adminPage' element={<Dashboard />} />
           <Route path='/admintrack' element={<AdminTrackStatus />} />
           <Route path="/track-order/:id" element={<AdminTrackOrder />} />
           <Route path='/manageproduct' element={<ManageProduct />} />
