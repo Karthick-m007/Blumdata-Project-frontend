@@ -30,7 +30,7 @@ export default function Dashboard() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <p>gyytfg678fr567rrtf687gtyho768o</p>
+            
             <Navbar />
             <main className="max-w-7xl mx-auto px-6 py-20">
                 {/* Header */}
