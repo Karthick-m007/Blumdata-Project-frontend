@@ -70,7 +70,7 @@ const LoginPage = () => {
                 if (data.success) {
                     if (isAdmin) {
                         // Admin login is successful
-                        navigate('/admin');
+                        navigate('/adminlogin');
                     } else {
                         // User login is successful
                         navigate('/userdashboard');
