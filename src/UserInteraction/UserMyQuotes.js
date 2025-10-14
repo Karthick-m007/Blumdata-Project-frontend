@@ -58,7 +58,7 @@ const MyQuotesPage = () => {
             case 'rejected':
                 return 'bg-red-200 p-1  px-3 rounded-pill text-xs  text-red-600'; // Red for rejected
             default:
-                return 'bg-gray-200 p-1  px-3 rounded-pill text-xs text-gray-600'; // Default to gray if unknown status
+                return 'bg-gray-200 p-1  px-3 rounded-pill text-xs text-gray-700'; // Default to gray if unknown status
         }
     };
 
