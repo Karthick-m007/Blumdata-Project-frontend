@@ -6,19 +6,19 @@ export default function PaymentVerification() {
   const url = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
-    fetchPayments(); // Fetch payments when the component loads
+    fetchPayments();
   }, []);
 
   const fetchPayments = () => {
     fetch(`${url}quotations`, {
       method: 'GET',
-      credentials: 'include', // Include credentials (cookies) if needed
+      credentials: 'include',
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           console.log('Fetched payments:', data.quotations);
-          setPayments(data.quotations); // Set payments data to the state
+          setPayments(data.quotations);
         } else {
           console.error('Error fetching payments:', data.message);
         }
@@ -27,23 +27,20 @@ export default function PaymentVerification() {
   };
 
   const toggleStatus = (id) => {
-    // Toggle payment status between Paid and Pending
     const updatedPayments = payments.map((payment) =>
       payment._id === id
         ? { ...payment, paymentStatus: payment.paymentStatus === 'Paid' ? 'Pending' : 'Paid' }
         : payment
     );
-    setPayments(updatedPayments); // Update the payments state
+    setPayments(updatedPayments);
 
     const status = updatedPayments.find(payment => payment._id === id).paymentStatus;
-    console.log("Toggling status for payment:", status); // Log the status value to check if it's correct
 
-    // Make API request to update payment status
     fetch(`${url}update-payment-status/${id}`, {
       method: 'PUT',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ paymentStatus: status }) // Send status as a single key
+      body: JSON.stringify({ paymentStatus: status })
     })
       .then((res) => res.json())
       .then((data) => {
@@ -54,8 +51,6 @@ export default function PaymentVerification() {
       .catch((err) => console.error('Error updating payment status:', err));
   };
 
-
-
   return (
     <div className="pt-24 bg-blue-50 min-h-screen">
       <Navbar />
@@ -64,7 +59,6 @@ export default function PaymentVerification() {
           Payment Verification
         </h1>
 
-        {/* Desktop Table */}
         <div className="hidden md:block bg-white rounded-xl shadow-md overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-blue-100">
@@ -134,12 +128,11 @@ export default function PaymentVerification() {
           </table>
         </div>
 
-        {/* Mobile Cards */}
         <div className="md:hidden space-y-6">
-          {payments.map(({ _id, user, product, total, paymentStatus }) => (
+          {payments.map(({ _id, name, product, total, paymentStatus }) => (
             <div key={_id} className="bg-white rounded-xl shadow-md p-5">
               <div className="flex justify-between items-center mb-3">
-                <h2 className="text-lg font-semibold text-blue-900">{user}</h2>
+                <h2 className="text-lg font-semibold text-blue-900">{name || "N/A"}</h2>
                 <span
                   className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold
                     ${paymentStatus === 'Paid'
@@ -173,8 +166,8 @@ export default function PaymentVerification() {
                   {paymentStatus}
                 </span>
               </div>
-              <p className="text-blue-800 mb-1"><strong>Product:</strong> {product}</p>
-              <p className="text-blue-700 mb-4"><strong>Amount:</strong> {total}</p>
+              <p className="text-blue-800 mb-1"><strong>Product:</strong> {product || "N/A"}</p>
+              <p className="text-blue-700 mb-4"><strong>Amount:</strong> {total || "N/A"}</p>
               <button
                 onClick={() => toggleStatus(_id)}
                 className={`w-full py-2 rounded-md text-white font-semibold transition shadow-sm
