@@ -80,8 +80,8 @@ export default function PaymentVerification() {
                     <span
                       className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold
                       ${pay.paymentStatus === 'Paid'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
+                          ? 'bg-green-100 text-green-500'
+                          : 'bg-red-100 text-red-500'
                         }`}
                     >
                       {pay.paymentStatus === 'Paid' ? (
@@ -115,7 +115,7 @@ export default function PaymentVerification() {
                       onClick={() => toggleStatus(pay._id)}
                       className={`px-4 py-2 rounded-md text-sm font-semibold shadow-sm transition
                       ${pay.paymentStatus === 'Paid'
-                          ? 'bg-red-500 hover:bg-red-600 text-white shadow-red-400/50'
+                          ? 'bg-red-500 hover:bg-red-600 text-white shadow-red-500/50'
                           : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-400/50'
                         }`}
                     >
@@ -136,8 +136,8 @@ export default function PaymentVerification() {
                 <span
                   className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold
                     ${paymentStatus === 'Paid'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-red-100 text-red-800'
+                      ? 'bg-green-100 text-green-500'
+                      : 'bg-red-100 text-red-500'
                     }`}
                 >
                   {paymentStatus === 'Paid' ? (
@@ -173,7 +173,7 @@ export default function PaymentVerification() {
                 className={`w-full py-2 rounded-md text-white font-semibold transition shadow-sm
                   ${paymentStatus === 'Paid'
                     ? 'bg-red-500 hover:bg-red-600 shadow-red-400/50'
-                    : 'bg-blue-600 hover:bg-blue-700 shadow-blue-400/50'
+                    : 'bg-blue-500 hover:bg-blue-600 shadow-blue-400/50'
                   }`}
               >
                 Mark {paymentStatus === 'Paid' ? 'Unpaid' : 'Paid'}
