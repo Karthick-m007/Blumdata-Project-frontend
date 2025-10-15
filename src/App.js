@@ -1,55 +1,56 @@
-// src/App.jsx
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import RegisterPage from './Components/Register';
+import { Route, Routes } from 'react-router-dom';
+import './App.css';
+import Dashboard from './Admininteraction/Dashboard';
 import UserDashboard from './UserInteraction/UserDashboard';
-import RequestQuoteForm from './UserInteraction/UserRequestQuoteForm';
+import RequestQuoteForm from './UserInteraction/UserRequestquotForm';
 import UserMyQuotes from './UserInteraction/UserMyQuotes';
+import TrackProductStatus from './UserInteraction/TrackProductStatus';
+import AdminTrackStatus from './Admininteraction/AdminTrackstatus';
 import ProductListing from './UserInteraction/ProductListing';
 import PaymentPage from './UserInteraction/PaymentPage';
-import QuoteDetails from './UserInteraction/QuoteDetails';
-import TrackOrderDetails from './UserInteraction/TrackOrderDetails';
-import AdminDashboard from './Admininteraction/Dashboard';
-import AdminTrackStatus from './Admininteraction/AdminTrackStatus';
 import ManageProduct from './Admininteraction/ManageProducts';
 import QuoteManagement from './Admininteraction/QuoteManagement';
 import PaymentVerification from './Admininteraction/PaymentVerification';
-import ViewOrders from './Admininteraction/ViewOrders';
-import AdminTrackOrder from './Admininteraction/AdminTrackOrder';
+import ViewOrders from './Admininteraction/AdminviewOrders';
+import QuoteDetails from './UserInteraction/QuoteDetails';
+import TrackOrder from './UserInteraction/TrackOrder';
+import TrackOrderDetails from './UserInteraction/TrackOrder';
 import LoginPage from './Components/Loginpage';
-import ProtectedRoute from "./Components/ProtectedRoute "
+import RegisterPage from './Components/Register';
+import ProtectedRoute from './Components/ProtectedRoute ';  // Import the ProtectedRoute
+import AdminTrackOrder from './Admininteraction/AdminTrackstatus';
 
-// Main App Component
 function App() {
   return (
-    <Router>
+    <div>
+      {/* Routes configuration */}
       <Routes>
-        {/* Public Routes */}
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
-        {/* User Routes */}
-        <Route path="/userdashboard" element={<UserDashboard />} />
-        <Route path="/requestquote" element={<RequestQuoteForm />} />
-        <Route path="/myquotes" element={<UserMyQuotes />} />
-        <Route path="/productlist" element={<ProductListing />} />
-        <Route path="/payment" element={<PaymentPage />} />
+        {/* Public routes */}
+        <Route path='/userdashboard' element={<UserDashboard />} />
+        <Route path='/requestquote' element={<RequestQuoteForm />} />
+        <Route path='/myquotes' element={<UserMyQuotes />} />
+        {/* <Route path='/trackproduct' element={<TrackProductStatus />} /> */}
+        <Route path='/productlist' element={<ProductListing />} />
+        <Route path='/payment' element={<PaymentPage />} />
         <Route path="/quote/:id" element={<QuoteDetails />} />
         <Route path="/trackorder" element={<TrackOrderDetails />} />
         <Route path="/trackorder/:id" element={<TrackOrderDetails />} />
 
-        {/* Protected Admin Routes */}
+        {/* (only accessible if logged in as admin) */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admintrack" element={<AdminTrackStatus />} />
+          <Route path='/admin' element={<Dashboard />} />
+          <Route path='/admintrack' element={<AdminTrackStatus />} />
           <Route path="/track-order/:id" element={<AdminTrackOrder />} />
-          <Route path="/manageproduct" element={<ManageProduct />} />
-          <Route path="/quotmanage" element={<QuoteManagement />} />
-          <Route path="/paymentverify" element={<PaymentVerification />} />
-          <Route path="/ordersadmin" element={<ViewOrders />} />
+          <Route path='/manageproduct' element={<ManageProduct />} />
+          <Route path='/quotmanage' element={<QuoteManagement />} />
+          <Route path='/paymentverify' element={<PaymentVerification />} />
+          <Route path='/ordersadmin' element={<ViewOrders />} />
         </Route>
       </Routes>
-    </Router>
+    </div>
   );
 }
 
