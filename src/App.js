@@ -2,7 +2,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import RegisterPage from './Components/Register';
-import ProtectedRoute from './Components/ProtectedRoute';
 import UserDashboard from './UserInteraction/UserDashboard';
 import RequestQuoteForm from './UserInteraction/UserRequestQuoteForm';
 import UserMyQuotes from './UserInteraction/UserMyQuotes';
@@ -18,6 +17,7 @@ import PaymentVerification from './Admininteraction/PaymentVerification';
 import ViewOrders from './Admininteraction/ViewOrders';
 import AdminTrackOrder from './Admininteraction/AdminTrackOrder';
 import LoginPage from './Components/Loginpage';
+import ProtectedRoute from "./Components/ProtectedRoute "
 
 // Main App Component
 function App() {
