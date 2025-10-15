@@ -1,10 +1,10 @@
+// src/Components/LoginPage.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for page redirection
+import { useNavigate } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 
 const LoginPage = () => {
-    const url = process.env.REACT_APP_BACKEND_URL
-    console.log(url)
+    const url = process.env.REACT_APP_BACKEND_URL;
     const [isAdmin, setIsAdmin] = useState(false); // Toggle between Admin and User login/register
     const [isLogin, setIsLogin] = useState(true); // Toggle between Login and Register forms
     const [formData, setFormData] = useState({
@@ -14,18 +14,6 @@ const LoginPage = () => {
     });
     const [error, setError] = useState(null); // For displaying errors like wrong credentials
     const navigate = useNavigate();
-
-    // Dummy admin credentials
-    // const adminCredentials = {
-    //     email: 'admin123@gmail.com',
-    //     password: 'Admin@123',
-    // };
-
-    // Dummy user credentials
-    // const userCredentials = {
-    //     email: 'user@user.com',
-    //     password: 'user123',
-    // };
 
     const handleLoginTypeChange = (e) => {
         setIsAdmin(e.target.value === 'admin');
@@ -69,12 +57,10 @@ const LoginPage = () => {
 
                 if (data.success) {
                     if (isAdmin) {
-                        console.log("Admin Data can be accessed")
-                        console.log("Admin:", isAdmin)
-                        // Admin login is successful
+                        localStorage.setItem('isAdminLoggedIn', 'true'); // Set admin login status
                         navigate('/admin');
                     } else {
-                        // User login is successful
+                        localStorage.setItem('isAdminLoggedIn', 'false'); // Set user login status
                         navigate('/userdashboard');
                     }
                 } else {
@@ -85,7 +71,7 @@ const LoginPage = () => {
                 setError('Something went wrong during login.');
             }
         } else {
-            // Registration code (unchanged)
+            // Registration code
             if (formData.password !== formData.confirmPassword) {
                 return setError('Passwords do not match.');
             }
@@ -113,18 +99,11 @@ const LoginPage = () => {
                 } else {
                     setError(data.message || 'Registration failed.');
                 }
-
             } catch (err) {
                 console.error('Registration error:', err);
                 setError('Something went wrong during registration.');
             }
         }
-    };
-
-
-
-    const handleRedirectToRegister = () => {
-        navigate('/register');
     };
 
     return (
@@ -133,7 +112,7 @@ const LoginPage = () => {
                 <h2 className="text-2xl font-bold text-center text-blue-800 mb-6">
                     {isLogin ? 'Login' : 'Register'}
                 </h2>
-
+                {/* Add login/register toggles, form inputs, etc. */}
                 <div className="flex justify-center space-x-4 mb-4">
                     <button
                         className={`px-4 py-2 rounded-full w-full ${!isAdmin ? 'bg-blue-500 text-white' : 'bg-gray-200 text-blue-500'}`}
@@ -152,6 +131,8 @@ const LoginPage = () => {
                 </div>
 
                 {error && <div className="text-red-500 text-sm text-center mb-4">{error}</div>}
+
+                {/* Login Form */}
                 <CSSTransition in={isLogin} timeout={300} classNames="fade" unmountOnExit>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
@@ -191,7 +172,7 @@ const LoginPage = () => {
                     </form>
                 </CSSTransition>
 
-                {/* Register Form */}
+                {/* Registration Form */}
                 <CSSTransition in={!isLogin} timeout={300} classNames="fade" unmountOnExit>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
@@ -244,16 +225,11 @@ const LoginPage = () => {
                     </form>
                 </CSSTransition>
 
-                {/* Forgot Password Link */}
-                {/* <div className="mt-4 text-center text-sm">
-                    <a href="#" className="text-blue-600 hover:text-blue-800">Forgot Password?</a>
-                </div> */}
-
                 {/* Switch between Login and Register */}
                 <div className="mt-4 text-center">
                     <button
                         className="text-blue-600 hover:text-blue-800 text-sm"
-                        onClick={handleRedirectToRegister}
+                        onClick={handleFormToggle}
                     >
                         {isLogin ? 'Don\'t have an account? Register here' : 'Already have an account? Login'}
                     </button>

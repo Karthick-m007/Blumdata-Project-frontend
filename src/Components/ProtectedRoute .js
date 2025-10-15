@@ -7,7 +7,7 @@ const ProtectedRoute = () => {
 
     // If not logged in as admin, redirect to the login page
     if (!isAdminLoggedIn) {
-        return <Navigate to="/admin" />;
+        return <Navigate to="/" />;
     }
 
     return <Outlet />; // Renders the protected route if admin is logged in
