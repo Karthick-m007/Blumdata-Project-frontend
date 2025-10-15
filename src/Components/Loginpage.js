@@ -22,6 +22,11 @@ const LoginPage = () => {
     const handleFormToggle = () => {
         setIsLogin(!isLogin);
         setError(null);
+        if (isLogin) {
+            navigate('/register');  // Redirect to registration page
+        } else {
+            navigate('/login');  // Redirect to login page
+        }
     };
 
     const handleChange = (e) => {
