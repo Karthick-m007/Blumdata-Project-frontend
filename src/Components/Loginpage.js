@@ -1,7 +1,5 @@
-// src/Components/LoginPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CSSTransition } from 'react-transition-group';
 
 const LoginPage = () => {
     const url = process.env.REACT_APP_BACKEND_URL;
@@ -22,10 +20,12 @@ const LoginPage = () => {
     const handleFormToggle = () => {
         setIsLogin(!isLogin);
         setError(null);
+
+        // Navigate to the correct page when toggling
         if (isLogin) {
             navigate('/register');  // Redirect to registration page
         } else {
-            navigate('/login');  // Redirect to login page
+            navigate('/');  // Redirect to login page
         }
     };
 
@@ -63,7 +63,7 @@ const LoginPage = () => {
                 if (data.success) {
                     if (isAdmin) {
                         localStorage.setItem('isAdminLoggedIn', 'true'); // Set admin login status
-                        console.log("is admin",isAdmin)
+                        console.log("is admin", isAdmin)
                         navigate('/admin');
                     } else {
                         localStorage.setItem('isAdminLoggedIn', 'false'); // Set user login status
@@ -118,7 +118,7 @@ const LoginPage = () => {
                 <h2 className="text-2xl font-bold text-center text-blue-800 mb-6">
                     {isLogin ? 'Login' : 'Register'}
                 </h2>
-                {/* Add login/register toggles, form inputs, etc. */}
+
                 <div className="flex justify-center space-x-4 mb-4">
                     <button
                         className={`px-4 py-2 rounded-full w-full ${!isAdmin ? 'bg-blue-500 text-white' : 'bg-gray-200 text-blue-500'}`}
@@ -139,7 +139,7 @@ const LoginPage = () => {
                 {error && <div className="text-red-500 text-sm text-center mb-4">{error}</div>}
 
                 {/* Login Form */}
-                <CSSTransition in={isLogin} timeout={300} classNames="fade" unmountOnExit>
+                {isLogin && (
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                             <label htmlFor="email" className="block text-sm pb-1 font-medium text-gray-700 ">Email</label>
@@ -176,10 +176,10 @@ const LoginPage = () => {
                             </button>
                         </div>
                     </form>
-                </CSSTransition>
+                )}
 
                 {/* Registration Form */}
-                <CSSTransition in={!isLogin} timeout={300} classNames="fade" unmountOnExit>
+                {!isLogin && (
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
@@ -229,7 +229,7 @@ const LoginPage = () => {
                             </button>
                         </div>
                     </form>
-                </CSSTransition>
+                )}
 
                 {/* Switch between Login and Register */}
                 <div className="mt-4 text-center">
