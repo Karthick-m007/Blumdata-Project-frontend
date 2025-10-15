@@ -38,7 +38,7 @@ export default function Navbar() {
     };
 
     const menuItems = [
-        { label: 'Dashboard', path: '/admindashboard' },
+        { label: 'Dashboard', path: '/admin' },
         { label: 'Manage Products', path: '/manageproduct' },
         { label: 'Manage Quotes', path: '/quotmanage' },
         // { label: 'Track Orders', path: '/admintrack' },
