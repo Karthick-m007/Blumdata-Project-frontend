@@ -54,17 +54,17 @@ export default function ViewOrders() {
     const getPaymentBadge = (paymentStatus) => {
         switch (paymentStatus) {
             case 'Paid':
-                return 'bg-green-200 text-green-800 px-4 py-2 rounded-full text-sm font-semibold';
+                return 'bg-green-200 text-green-800 ms-2 p-1 md:px-4 md:py-2 rounded-full text-sm font-semibold';
             case 'Pending':
-                return 'bg-yellow-200 text-yellow-800 px-4 py-2 rounded-full text-sm font-semibold';
+                return 'bg-yellow-200 text-yellow-800 ms-2 p-1 md:px-4 md:py-2 rounded-full text-sm font-semibold';
             case 'Failed':
-                return 'bg-red-200 text-red-800 px-4 py-2 rounded-full text-sm font-semibold';
+                return 'bg-red-200 text-red-800 ms-2 p-1 md:px-4 md:py-2 rounded-full text-sm font-semibold';
             case 'Refunded':
-                return 'bg-blue-200 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold';
+                return 'bg-blue-200 text-blue-800 ms-2 p-1 md:px-4 md:py-2 rounded-full text-sm font-semibold';
             case 'In Progress':
-                return 'bg-purple-200 text-purple-800 px-4 py-2 rounded-full text-sm font-semibold';
+                return 'bg-purple-200 text-purple-800 ms-2 p-1 md:px-4 md:py-2 rounded-full text-sm font-semibold';
             default:
-                return 'bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-semibold';
+                return 'bg-gray-200 text-gray-800 ms-2 p-1 md:px-4 md:py-2 rounded-full text-sm font-semibold';
         }
     };
 
