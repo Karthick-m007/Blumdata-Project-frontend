@@ -58,6 +58,7 @@ const LoginPage = () => {
                 if (data.success) {
                     if (isAdmin) {
                         localStorage.setItem('isAdminLoggedIn', 'true'); // Set admin login status
+                        console.log("is admin",isAdmin)
                         navigate('/admin');
                     } else {
                         localStorage.setItem('isAdminLoggedIn', 'false'); // Set user login status
